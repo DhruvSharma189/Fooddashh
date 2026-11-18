@@ -1,0 +1,262 @@
+{
+  "info": {
+    "name": "FoodDash",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "menuId",
+      "value": ""
+    },
+    {
+      "key": "orderId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Add dish",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/menu",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\":\"Test Dish\",\"description\":\"Sample\",\"category\":\"Pizza\",\"price\":199,\"veg\":true,\"imageUrl\":\"https://picsum.photos/seed/t/600/450\",\"rating\":4,\"available\":true}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.collectionVariables.set('menuId', pm.response.json().id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "List menu",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/menu"
+      }
+    },
+    {
+      "name": "Filter menu",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/menu?search=chi&category=Burgers&veg=false&sort=price_asc"
+      }
+    },
+    {
+      "name": "Get dish",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/menu/{{menuId}}"
+      }
+    },
+    {
+      "name": "Update dish",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/menu/{{menuId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\":\"Test Dish v2\",\"description\":\"Sample\",\"category\":\"Pizza\",\"price\":199,\"veg\":true,\"imageUrl\":\"https://picsum.photos/seed/t/600/450\",\"rating\":4,\"available\":true}"
+        }
+      }
+    },
+    {
+      "name": "Categories",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/menu/categories"
+      }
+    },
+    {
+      "name": "Delete dish",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/menu/{{menuId}}"
+      }
+    },
+    {
+      "name": "Place order",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/orders",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"customerName\":\"Asha\",\"phone\":\"9876543210\",\"address\":\"12 MG Road, Delhi\",\"items\":[{\"menuItemId\":\"{{menuId}}\",\"quantity\":2}]}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.collectionVariables.set('orderId', pm.response.json().id);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "List orders",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/orders"
+      }
+    },
+    {
+      "name": "List orders by status",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/orders?status=PLACED"
+      }
+    },
+    {
+      "name": "Get order",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/orders/{{orderId}}"
+      }
+    },
+    {
+      "name": "Update order status",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/orders/{{orderId}}/status",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"status\":\"PREPARING\"}"
+        }
+      }
+    },
+    {
+      "name": "Order validation error (400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/orders",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"customerName\":\"A\",\"phone\":\"123\",\"items\":[]}"
+        }
+      }
+    },
+    {
+      "name": "Dish not found (404)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/menu/000000000000000000000000"
+      }
+    },
+    {
+      "name": "Upload image",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/images/upload",
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
